@@ -1,26 +1,59 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test/components/menu_list2.dart';
-import 'package:test/screens/container.dart';
+import 'package:test/screens/Supplier1.dart';
 
-class MenuHMC extends StatefulWidget {
-  static String routeName = "/menuhmc";
+class Menu extends StatefulWidget {
+  static String routeName = "/menu";
   @override
-  _MenuHMCPageState createState() => _MenuHMCPageState();
+  _MenuPageState createState() => _MenuPageState();
 }
 
-class _MenuHMCPageState extends State<MenuHMC> {
-  bool containerVisible = true;
-  bool transportationVisible = true;
-  bool checkupVisible = true;
+class _MenuPageState extends State<Menu> {
+  bool supplier1 = true;
+  bool supplier2 = true;
+  bool supplier3 = true;
 
   @override
   void initState() {
     super.initState();
   }
 
+  Widget _bottomWidget() {
+    Size size = MediaQuery.of(context).size;
+    return Container(
+      width: double.infinity,
+      height: size.height / 6,
+      child: Stack(
+        alignment: Alignment.center,
+        children: <Widget>[
+          Positioned(
+            //top: MediaQuery.of(context).size.height / 1.135,
+            right: MediaQuery.of(context).size.width / 1.78,
+            child: Image.asset("assets/shms1.png", width: size.width * 0.38),
+          ),
+          Positioned(
+            //top: MediaQuery.of(context).size.height / 1.135,
+            right: MediaQuery.of(context).size.width / 20,
+            child: ElevatedButton(
+              onPressed: () {},
+              child: Text('1.0'),
+              style: ElevatedButton.styleFrom(
+                primary: Colors.red[400], //
+                shape: CircleBorder(),
+                padding: EdgeInsets.all(12),
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
       body: Container(
         constraints: BoxConstraints.expand(),
@@ -36,11 +69,10 @@ class _MenuHMCPageState extends State<MenuHMC> {
           padding: EdgeInsets.symmetric(vertical: 50),
           child: Column(
             children: [
-              SizedBox(height: 10),
               Visibility(
-                visible: containerVisible,
+                visible: supplier1,
                 child: MenuList2(
-                  text: "Container",
+                  text: "Supplier-1",
                   imageIcon: ImageIcon(
                     AssetImage('assets/container.png'),
                     size: 45,
@@ -48,14 +80,14 @@ class _MenuHMCPageState extends State<MenuHMC> {
                   ),
                   press: () => {
                     Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => Containers()))
+                        MaterialPageRoute(builder: (context) => Supplier1()))
                   },
                 ),
               ),
               Visibility(
-                visible: transportationVisible,
+                visible: supplier2,
                 child: MenuList2(
-                  text: "Transportation",
+                  text: "Supplier-2",
                   imageIcon: ImageIcon(
                     AssetImage('assets/transportation.png'),
                     size: 45,
@@ -65,9 +97,9 @@ class _MenuHMCPageState extends State<MenuHMC> {
                 ),
               ),
               Visibility(
-                visible: checkupVisible,
+                visible: supplier3,
                 child: MenuList2(
-                  text: "Check-up",
+                  text: "Supplier-3",
                   imageIcon: ImageIcon(
                     AssetImage('assets/checkup.png'),
                     size: 45,
@@ -76,6 +108,8 @@ class _MenuHMCPageState extends State<MenuHMC> {
                   press: () => {},
                 ),
               ),
+
+              //_bottomWidget(),
             ],
           ),
         ),

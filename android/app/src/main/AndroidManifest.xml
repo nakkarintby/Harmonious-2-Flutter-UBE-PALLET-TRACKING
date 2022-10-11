@@ -21,7 +21,7 @@
     </intent>
     </queries>
    <application
-        android:label="SMC"
+        android:label="UBE"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
 
