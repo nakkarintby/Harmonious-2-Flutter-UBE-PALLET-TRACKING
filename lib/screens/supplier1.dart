@@ -36,6 +36,7 @@ class _Supplier1State extends State<Supplier1> {
   bool listVisible = false;
   int palletnumber = 10;
   String showScanner = '';
+  bool showCamera = false;
   late List<FocusNode> focusNodes = List.generate(3, (index) => FocusNode());
 
   @override
@@ -58,6 +59,16 @@ class _Supplier1State extends State<Supplier1> {
       max = prefs.getInt('maxSupplier1');
       showScanner = prefs.getString('showScanner');
     });
+
+    if (showScanner == 'NO CAMERA') {
+      setState(() {
+        showCamera = false;
+      });
+    } else if (showScanner == 'HAVE CAMERA') {
+      setState(() {
+        showCamera = true;
+      });
+    }
   }
 
   void setVisible() {
@@ -243,7 +254,7 @@ class _Supplier1State extends State<Supplier1> {
     setFocus();
   }
 
-  Future<void> scan() async {
+  Future<void> scanQR() async {
     String barcodeScanRes;
     try {
       barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
@@ -252,27 +263,15 @@ class _Supplier1State extends State<Supplier1> {
       barcodeScanRes = 'Failed to get platform version.';
     }
 
-    if (barcodeScanRes.isNotEmpty) {
-      for (int i = 0; i < list.length; i++) {
-        if (list[i] == barcodeScanRes) {
-          showErrorDialog('Data Duplicate!');
-          return;
-        }
-      }
-      setState(() {
-        list.add(barcodeScanRes);
-      });
+    if (barcodeScanRes.length <= 1) {
+      return;
+    }
 
-      if (list.length == max) {
-        setState(() {
-          step++;
-        });
-        setVisible();
-        setReadOnly();
-        setColor();
-        setText();
-        setFocus();
-      }
+    if (step == 1) {
+      setState(() {
+        scanController.text = barcodeScanRes;
+      });
+      checkScan();
     }
   }
 
@@ -466,23 +465,62 @@ class _Supplier1State extends State<Supplier1> {
           ),
         ),
       ),
-      SizedBox(
-        height: MediaQuery.of(context).size.height / 12,
-        width: MediaQuery.of(context).size.width / 3.5,
-        child: new RaisedButton(
-          focusNode: focusNodes[2],
-          color: Colors.blue,
-          child: const Text('POST',
-              style: TextStyle(
-                fontSize: 20,
-                color: Colors.white,
-              )),
-          onPressed: postEnabled
-              ? () async {
-                  await post();
-                }
-              : null,
-        ),
+      Row(
+        mainAxisAlignment:
+            MainAxisAlignment.center, //Center Row contents horizontally,
+        crossAxisAlignment:
+            CrossAxisAlignment.center, //Center Row contents vertically,
+        children: <Widget>[
+          SizedBox(
+            height: MediaQuery.of(context).size.height / 12,
+            width: MediaQuery.of(context).size.width / 3.5,
+            child: new RaisedButton(
+              focusNode: focusNodes[2],
+              color: Colors.blue,
+              child: const Text('POST',
+                  style: TextStyle(
+                    fontSize: 20,
+                    color: Colors.white,
+                  )),
+              onPressed: postEnabled
+                  ? () async {
+                      await post();
+                    }
+                  : null,
+            ),
+          ),
+          SizedBox(
+            width: MediaQuery.of(context).size.width / 8,
+          ),
+          Visibility(
+              visible: showCamera,
+              child: SizedBox.fromSize(
+                size: Size(
+                    MediaQuery.of(context).size.width / 6,
+                    MediaQuery.of(context).size.width /
+                        6), // button width and height
+                child: ClipOval(
+                  child: Material(
+                    color: Colors.orange[300], // button color
+                    child: InkWell(
+                      splashColor: Colors.green, // splash color
+                      onTap: () {}, // button pressed
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          IconButton(
+                              icon: Icon(
+                                Icons.qr_code_scanner_rounded,
+                                color: Colors.black,
+                              ),
+                              onPressed: scanQR)
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ))
+        ],
       ),
     ]);
   }
