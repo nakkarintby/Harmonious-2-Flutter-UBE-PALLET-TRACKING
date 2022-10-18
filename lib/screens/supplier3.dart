@@ -16,13 +16,13 @@ import 'package:passcode_screen/passcode_screen.dart';
 import 'package:location/location.dart';
 import 'package:test/class/postpallet.dart';
 
-class Supplier1 extends StatefulWidget {
-  static String routeName = "/supplier1";
+class Supplier3 extends StatefulWidget {
+  static String routeName = "/supplier3";
   @override
-  _Supplier1State createState() => _Supplier1State();
+  _Supplier3State createState() => _Supplier3State();
 }
 
-class _Supplier1State extends State<Supplier1> {
+class _Supplier3State extends State<Supplier3> {
   TextEditingController itrController = TextEditingController();
   TextEditingController scanController = TextEditingController();
   late Timer timer;
@@ -60,7 +60,7 @@ class _Supplier1State extends State<Supplier1> {
   Future<void> getConfigs() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      max = prefs.getInt('maxSupplier1');
+      max = prefs.getInt('maxSupplier3');
       showScanner = prefs.getString('showScanner');
       mobileUser = prefs.getString('mobile');
     });

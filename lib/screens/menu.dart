@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test/components/menu_list2.dart';
 import 'package:test/screens/Supplier1.dart';
+import 'package:test/screens/supplier2.dart';
+import 'package:test/screens/supplier3.dart';
 
 class Menu extends StatefulWidget {
   static String routeName = "/menu";
@@ -100,7 +102,12 @@ class _MenuPageState extends State<Menu> {
                         size: 45,
                         color: Colors.blue,
                       ),
-                      press: () => {},
+                      press: () => {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Supplier2()))
+                      },
                     ),
                   ),
                   Visibility(
@@ -112,7 +119,12 @@ class _MenuPageState extends State<Menu> {
                         size: 45,
                         color: Colors.blue,
                       ),
-                      press: () => {},
+                      press: () => {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Supplier3()))
+                      },
                     ),
                   ),
 
