@@ -41,7 +41,7 @@ class _Supplier1State extends State<Supplier1> {
   String showScanner = '';
   bool showCamera = false;
   late List<FocusNode> focusNodes = List.generate(3, (index) => FocusNode());
-  String mobileUser = "";
+  String usernameUser = "";
 
   @override
   void initState() {
@@ -62,7 +62,7 @@ class _Supplier1State extends State<Supplier1> {
     setState(() {
       max = prefs.getInt('maxSupplier1');
       showScanner = prefs.getString('showScanner');
-      mobileUser = prefs.getString('mobile');
+      usernameUser = prefs.getString('username');
     });
 
     if (showScanner == 'NO CAMERA') {
@@ -221,6 +221,17 @@ class _Supplier1State extends State<Supplier1> {
   }
 
   Future<void> checkScan() async {
+    if (scanController.text.toString() == '-1') {
+      setState(() {
+        scanController.text = '';
+      });
+      return;
+    }
+    int temp = 0;
+    setState(() {
+      temp = int.parse(scanController.text.toString());
+      scanController.text = temp.toString();
+    });
     for (int i = 0; i < list.length; i++) {
       if (list[i] == scanController.text.toString()) {
         showErrorDialog('Data Duplicate!');
@@ -262,7 +273,7 @@ class _Supplier1State extends State<Supplier1> {
         pallet.iTRNo = itrController.text.toString();
         pallet.rFID = list[i];
         pallet.rFIDHEX = list[i];
-        pallet.scanBy = mobileUser;
+        pallet.scanBy = usernameUser;
         pallet.createdTime = DateTime.now().toString();
         listpallet.add(pallet);
       });
@@ -315,10 +326,6 @@ class _Supplier1State extends State<Supplier1> {
           '#ff6666', 'Cancel', true, ScanMode.QR);
     } on PlatformException {
       barcodeScanRes = 'Failed to get platform version.';
-    }
-
-    if (barcodeScanRes.length <= 1) {
-      return;
     }
 
     if (step == 1) {
@@ -401,7 +408,7 @@ class _Supplier1State extends State<Supplier1> {
           height: 16,
         ),
         TextFormField(
-          //keyboardType: TextInputType.number,
+          keyboardType: TextInputType.number,
           focusNode: focusNodes[0],
           maxLength: 13,
           onFieldSubmitted: (value) {
@@ -479,8 +486,8 @@ class _Supplier1State extends State<Supplier1> {
     return Column(children: <Widget>[
       TextFormField(
         focusNode: focusNodes[1],
-        //keyboardType: TextInputType.number,
-        maxLength: 13,
+        keyboardType: TextInputType.number,
+        //maxLength: 13,
         onFieldSubmitted: (value) {
           if (value.isNotEmpty) {
             checkScan();
@@ -495,9 +502,9 @@ class _Supplier1State extends State<Supplier1> {
         decoration: InputDecoration(
           fillColor: ScanColor,
           filled: true,
-          hintText: "Please Enter Scan",
+          hintText: "Please Scan",
           prefixIcon: Icon(
-            Icons.assessment_outlined,
+            Icons.document_scanner_outlined,
             size: 26,
             color: Colors.green,
           ),
@@ -518,6 +525,9 @@ class _Supplier1State extends State<Supplier1> {
             ),
           ),
         ),
+      ),
+      SizedBox(
+        height: 16,
       ),
       Row(
         mainAxisAlignment:

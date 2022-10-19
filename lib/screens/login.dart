@@ -14,7 +14,7 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  TextEditingController mobileController = TextEditingController();
+  TextEditingController usernameController = TextEditingController();
   final RoundedLoadingButtonController _btnController =
       RoundedLoadingButtonController();
   late Timer timer;
@@ -23,6 +23,7 @@ class _LoginState extends State<Login> {
   TextEditingController supplier1Controller = TextEditingController();
   TextEditingController supplier2Controller = TextEditingController();
   TextEditingController supplier3Controller = TextEditingController();
+  late List<FocusNode> focusNodes = List.generate(5, (index) => FocusNode());
 
   int maxSupplier1 = 0;
   int maxSupplier2 = 0;
@@ -78,45 +79,55 @@ class _LoginState extends State<Login> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
                 TextFormField(
+                  focusNode: focusNodes[0],
                   //autofocus: true, //set initail focus on dialog
                   keyboardType: TextInputType.number,
                   readOnly: false,
                   controller: supplier1Controller
                     ..text = prefs.getInt('maxSupplier1').toString(),
                   decoration: InputDecoration(
-                      labelText: 'maxSupplier1',
-                      hintText: "Enter maxSupplier1"),
+                      labelText: 'GoodPack', hintText: "Enter max Good-Pack"),
                   textInputAction: TextInputAction.next,
-                  onEditingComplete: () {},
+                  onEditingComplete: () {
+                    Future.delayed(Duration(milliseconds: 100)).then((_) =>
+                        FocusScope.of(context).requestFocus(focusNodes[1]));
+                  },
                 ),
                 TextFormField(
+                  focusNode: focusNodes[1],
                   //autofocus: true, //set initail focus on dialog
                   keyboardType: TextInputType.number,
                   readOnly: false,
                   controller: supplier2Controller
                     ..text = prefs.getInt('maxSupplier2').toString(),
                   decoration: InputDecoration(
-                      labelText: 'maxSupplier2',
-                      hintText: "Enter maxSupplier2"),
+                      labelText: 'GPS', hintText: "Enter max GPS"),
                   textInputAction: TextInputAction.next,
-                  onEditingComplete: () {},
+                  onEditingComplete: () {
+                    Future.delayed(Duration(milliseconds: 100)).then((_) =>
+                        FocusScope.of(context).requestFocus(focusNodes[2]));
+                  },
                 ),
                 TextFormField(
+                  focusNode: focusNodes[2],
                   //autofocus: true, //set initail focus on dialog
                   keyboardType: TextInputType.number,
                   readOnly: false,
                   controller: supplier3Controller
                     ..text = prefs.getInt('maxSupplier3').toString(),
                   decoration: InputDecoration(
-                      labelText: 'maxSupplier3',
-                      hintText: "Enter maxSupplier3"),
+                      labelText: 'CIMC', hintText: "Enter max CIMC "),
                   textInputAction: TextInputAction.next,
-                  onEditingComplete: () {},
+                  onEditingComplete: () {
+                    Future.delayed(Duration(milliseconds: 100)).then((_) =>
+                        FocusScope.of(context).requestFocus(focusNodes[3]));
+                  },
                 ),
                 SizedBox(
                   height: 25,
                 ),
                 new DropdownButton<String>(
+                  focusNode: focusNodes[3],
                   isDense: true,
                   isExpanded: true,
                   value: showScanner,
@@ -134,6 +145,8 @@ class _LoginState extends State<Login> {
                     setState(() {
                       showScanner = val!;
                     });
+                    Future.delayed(Duration(milliseconds: 100)).then((_) =>
+                        FocusScope.of(context).requestFocus(focusNodes[4]));
                   },
                 ),
               ],
@@ -151,7 +164,7 @@ class _LoginState extends State<Login> {
                 },
               ),
               FlatButton(
-                //focusNode: focusNodes[0],
+                focusNode: focusNodes[4],
                 color: Colors.green,
                 textColor: Colors.white,
                 child: Text('Save'),
@@ -222,16 +235,16 @@ class _LoginState extends State<Login> {
 
     try {
       Timer(Duration(seconds: 3), () async {
-        if (mobileController.text.toString().length == 10) {
-          prefs.setString('mobile', mobileController.text.toString());
+        if (usernameController.text.toString().length == 10) {
+          prefs.setString('username', usernameController.text.toString());
           _btnController.reset();
-          mobileController.text = '';
+          usernameController.text = '';
           Navigator.push(
               context, MaterialPageRoute(builder: (context) => Menu()));
         } else {
           _btnController.reset();
-          mobileController.text = '';
-          showErrorDialog('Please Enter Mobile');
+          usernameController.text = '';
+          showErrorDialog('Please Enter username');
         }
       });
     } catch (e) {
@@ -319,22 +332,22 @@ class _LoginState extends State<Login> {
   Widget _contextWidget() {
     return Column(
       children: <Widget>[
-        _entryFieldMobile("Mobile Number", isPassword: false),
+        _entryFieldusername("username Number", isPassword: false),
       ],
     );
   }
 
-  Widget _entryFieldMobile(String title, {bool isPassword = false}) {
+  Widget _entryFieldusername(String title, {bool isPassword = false}) {
     return TextFormField(
       keyboardType: TextInputType.number,
       maxLength: 10,
-      controller: mobileController,
+      controller: usernameController,
       style: TextStyle(
         fontSize: 18,
         fontWeight: FontWeight.bold,
       ),
       decoration: InputDecoration(
-        prefixIcon: Icon(Icons.phone),
+        prefixIcon: Icon(Icons.perm_identity_outlined),
         enabledBorder: OutlineInputBorder(
             borderSide: BorderSide(color: Colors.black12),
             borderRadius: BorderRadius.circular(10)),
@@ -344,7 +357,7 @@ class _LoginState extends State<Login> {
         prefix: Padding(
           padding: EdgeInsets.symmetric(horizontal: 8),
           child: Text(
-            '(+66)',
+            '',
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,

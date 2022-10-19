@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test/components/menu_list2.dart';
 import 'package:test/screens/Supplier1.dart';
+import 'package:test/screens/login.dart';
 import 'package:test/screens/supplier2.dart';
 import 'package:test/screens/supplier3.dart';
 
@@ -17,6 +18,7 @@ class _MenuPageState extends State<Menu> {
   bool supplier1 = true;
   bool supplier2 = true;
   bool supplier3 = true;
+  bool logout = true;
 
   @override
   void initState() {
@@ -79,9 +81,9 @@ class _MenuPageState extends State<Menu> {
                   Visibility(
                     visible: supplier1,
                     child: MenuList2(
-                      text: "Supplier-1",
+                      text: "GoodPack",
                       imageIcon: ImageIcon(
-                        AssetImage('assets/container.png'),
+                        AssetImage('assets/company.png'),
                         size: 45,
                         color: Colors.blue,
                       ),
@@ -96,9 +98,9 @@ class _MenuPageState extends State<Menu> {
                   Visibility(
                     visible: supplier2,
                     child: MenuList2(
-                      text: "Supplier-2",
+                      text: "GPS",
                       imageIcon: ImageIcon(
-                        AssetImage('assets/transportation.png'),
+                        AssetImage('assets/company.png'),
                         size: 45,
                         color: Colors.blue,
                       ),
@@ -113,9 +115,9 @@ class _MenuPageState extends State<Menu> {
                   Visibility(
                     visible: supplier3,
                     child: MenuList2(
-                      text: "Supplier-3",
+                      text: "CIMC",
                       imageIcon: ImageIcon(
-                        AssetImage('assets/checkup.png'),
+                        AssetImage('assets/company.png'),
                         size: 45,
                         color: Colors.blue,
                       ),
@@ -124,6 +126,21 @@ class _MenuPageState extends State<Menu> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) => Supplier3()))
+                      },
+                    ),
+                  ),
+                  Visibility(
+                    visible: logout,
+                    child: MenuList2(
+                      text: "Log out",
+                      imageIcon: ImageIcon(
+                        AssetImage('assets/logout.png'),
+                        size: 45,
+                        color: Colors.blue,
+                      ),
+                      press: () => {
+                        Navigator.pushReplacement(context,
+                            MaterialPageRoute(builder: (context) => Login()))
                       },
                     ),
                   ),
