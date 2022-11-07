@@ -42,6 +42,7 @@ class _Supplier2State extends State<Supplier2> {
   bool showCamera = false;
   late List<FocusNode> focusNodes = List.generate(3, (index) => FocusNode());
   String usernameUser = "";
+  String configs = '';
 
   @override
   void initState() {
@@ -63,6 +64,7 @@ class _Supplier2State extends State<Supplier2> {
       max = prefs.getInt('maxSupplier2');
       showScanner = prefs.getString('showScanner');
       usernameUser = prefs.getString('username');
+      configs = prefs.getString('configs');
     });
 
     if (showScanner == 'NO CAMERA') {
@@ -201,8 +203,8 @@ class _Supplier2State extends State<Supplier2> {
   }
 
   Future<void> checkITR() async {
-    if (itrController.text.length != 13) {
-      showErrorDialog('Please Enter ITR 13 LETTERS');
+    if (itrController.text.length < 10 || itrController.text.length > 13) {
+      showErrorDialog('Please Enter ITR 10-13 LETTERS');
       setVisible();
       setReadOnly();
       setColor();
@@ -279,8 +281,8 @@ class _Supplier2State extends State<Supplier2> {
       });
     }
 
-    final uri = Uri.parse(
-        'http://selene.hms-cloud.com:8088/API/api/receivedpallet/create');
+    final uri =
+        Uri.parse('http://' + configs + '/API/api/receivedpallet/create');
     final headers = {'Content-Type': 'application/json'};
     var jsonBody = jsonEncode(listpallet);
     final encoding = Encoding.getByName('utf-8');
@@ -644,7 +646,7 @@ class _Supplier2State extends State<Supplier2> {
                       padding: EdgeInsets.all(10.0),
                       shape: CircleBorder(),
                     ),
-                    title: Text(temp.toString()),
+                    title: Text('Pallet ' + temp.toString()),
                     subtitle: Text(list[index].toString()),
                   ),
                 );
@@ -660,6 +662,17 @@ class _Supplier2State extends State<Supplier2> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        appBar: AppBar(
+          toolbarHeight: 50,
+          leading: BackButton(color: Colors.black),
+          backgroundColor: Colors.white,
+          title: Text(
+            'GPS',
+            maxLines: 3,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(color: Colors.black, fontSize: 18),
+          ),
+        ),
         resizeToAvoidBottomInset: false,
         backgroundColor: Color(0xfff7f6fb),
         body: Container(
@@ -669,7 +682,7 @@ class _Supplier2State extends State<Supplier2> {
               padding: EdgeInsets.symmetric(vertical: 24, horizontal: 32),
               child: Column(
                 children: [
-                  SizedBox(height: 20),
+                  //SizedBox(height: 20),
                   Visibility(
                       visible: itrVisible,
                       child: Container(

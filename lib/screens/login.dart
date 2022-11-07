@@ -23,12 +23,14 @@ class _LoginState extends State<Login> {
   TextEditingController supplier1Controller = TextEditingController();
   TextEditingController supplier2Controller = TextEditingController();
   TextEditingController supplier3Controller = TextEditingController();
-  late List<FocusNode> focusNodes = List.generate(5, (index) => FocusNode());
+  TextEditingController configsController = TextEditingController();
+  late List<FocusNode> focusNodes = List.generate(6, (index) => FocusNode());
 
   int maxSupplier1 = 0;
   int maxSupplier2 = 0;
   int maxSupplier3 = 0;
   String showScanner = '';
+  String configs = '';
 
   @override
   void initState() {
@@ -42,24 +44,29 @@ class _LoginState extends State<Login> {
     bool maxSupplier2Prefs = prefs.containsKey('maxSupplier2');
     bool maxSupplier3Prefs = prefs.containsKey('maxSupplier3');
     bool showScannerPrefs = prefs.containsKey('showScanner');
+    bool configsprefs = prefs.containsKey('configs');
 
     if (maxSupplier1Prefs &&
         maxSupplier2Prefs &&
         maxSupplier3Prefs &&
-        showScannerPrefs) {
+        showScannerPrefs &&
+        configsprefs) {
       setState(() {
         maxSupplier1 = prefs.getInt('maxSupplier1');
         maxSupplier2 = prefs.getInt('maxSupplier2');
         maxSupplier3 = prefs.getInt('maxSupplier3');
         showScanner = prefs.getString('showScanner');
+        configs = prefs.getString('configs');
       });
     } else {
       prefs.setInt('maxSupplier1', 0);
       prefs.setInt('maxSupplier2', 0);
       prefs.setInt('maxSupplier3', 0);
       prefs.setString('showScanner', 'NO CAMERA');
+      prefs.setString('configs', 'selene.hms-cloud.com:8088');
       setState(() {
         showScanner = prefs.getString('showScanner');
+        configs = prefs.getString('configs');
       });
     }
   }
@@ -123,11 +130,26 @@ class _LoginState extends State<Login> {
                         FocusScope.of(context).requestFocus(focusNodes[3]));
                   },
                 ),
+                TextFormField(
+                  focusNode: focusNodes[3],
+                  //autofocus: true, //set initail focus on dialog
+                  //keyboardType: TextInputType.number,
+                  readOnly: false,
+                  controller: configsController
+                    ..text = prefs.getString('configs').toString(),
+                  decoration: InputDecoration(
+                      labelText: 'Configs', hintText: "Enter Url"),
+                  textInputAction: TextInputAction.next,
+                  onEditingComplete: () {
+                    Future.delayed(Duration(milliseconds: 100)).then((_) =>
+                        FocusScope.of(context).requestFocus(focusNodes[4]));
+                  },
+                ),
                 SizedBox(
                   height: 25,
                 ),
                 new DropdownButton<String>(
-                  focusNode: focusNodes[3],
+                  focusNode: focusNodes[4],
                   isDense: true,
                   isExpanded: true,
                   value: showScanner,
@@ -146,7 +168,7 @@ class _LoginState extends State<Login> {
                       showScanner = val!;
                     });
                     Future.delayed(Duration(milliseconds: 100)).then((_) =>
-                        FocusScope.of(context).requestFocus(focusNodes[4]));
+                        FocusScope.of(context).requestFocus(focusNodes[5]));
                   },
                 ),
               ],
@@ -164,7 +186,7 @@ class _LoginState extends State<Login> {
                 },
               ),
               FlatButton(
-                focusNode: focusNodes[4],
+                focusNode: focusNodes[5],
                 color: Colors.green,
                 textColor: Colors.white,
                 child: Text('Save'),
@@ -176,6 +198,7 @@ class _LoginState extends State<Login> {
                         'maxSupplier2', int.parse(supplier2Controller.text));
                     prefs.setInt(
                         'maxSupplier3', int.parse(supplier3Controller.text));
+                    prefs.setString('configs', configsController.text);
                     prefs.setString('showScanner', showScanner);
                     Navigator.pop(context);
                   });
@@ -235,7 +258,7 @@ class _LoginState extends State<Login> {
 
     try {
       Timer(Duration(seconds: 3), () async {
-        if (usernameController.text.toString().length == 10) {
+        if (usernameController.text.toString().isNotEmpty) {
           prefs.setString('username', usernameController.text.toString());
           _btnController.reset();
           usernameController.text = '';
@@ -339,8 +362,8 @@ class _LoginState extends State<Login> {
 
   Widget _entryFieldusername(String title, {bool isPassword = false}) {
     return TextFormField(
-      keyboardType: TextInputType.number,
-      maxLength: 10,
+      //keyboardType: TextInputType.number,
+      //maxLength: 10,
       controller: usernameController,
       style: TextStyle(
         fontSize: 18,
