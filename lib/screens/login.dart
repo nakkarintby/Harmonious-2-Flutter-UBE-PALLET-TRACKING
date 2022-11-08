@@ -425,7 +425,7 @@ class _LoginState extends State<Login> {
                   padding: EdgeInsets.symmetric(vertical: 24, horizontal: 32),
                   child: Column(
                     children: [
-                      SizedBox(height: 20),
+                      SizedBox(height: 40),
                       _titleWidget(),
                       SizedBox(height: 32),
                       Container(
@@ -444,6 +444,7 @@ class _LoginState extends State<Login> {
                           ],
                         ),
                       ),
+                      SizedBox(height: 4),
                       _bottomWidget(),
                     ],
                   ),

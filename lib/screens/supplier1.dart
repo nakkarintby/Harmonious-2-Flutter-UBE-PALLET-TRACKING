@@ -645,7 +645,7 @@ class _Supplier1State extends State<Supplier1> {
                         size: 35.0,
                         color: Colors.red,
                       ),
-                      padding: EdgeInsets.all(10.0),
+                      padding: EdgeInsets.all(5.0),
                       shape: CircleBorder(),
                     ),
                     title: Text('Pallet ' + temp.toString()),
@@ -654,7 +654,7 @@ class _Supplier1State extends State<Supplier1> {
                 );
               },
               itemCount: list.length,
-              padding: EdgeInsets.all(5),
+              padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
               scrollDirection: Axis.vertical,
             ),
           ]),
