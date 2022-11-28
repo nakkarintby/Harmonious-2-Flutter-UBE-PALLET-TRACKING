@@ -229,11 +229,29 @@ class _Supplier3State extends State<Supplier3> {
       });
       return;
     }
-    int temp = 0;
-    setState(() {
-      temp = int.parse(scanController.text.toString());
-      scanController.text = 'CI' + temp.toString();
-    });
+    bool checksplit = false;
+
+    String firstcheck = scanController.text.toString();
+    if (firstcheck[0] == '0') {
+      checksplit = true;
+    } else {
+      checksplit = false;
+    }
+
+    if (checksplit) {
+      int temp = 0;
+      setState(() {
+        temp = int.parse(scanController.text.toString());
+        scanController.text = 'MC' + temp.toString();
+        print(scanController.text);
+      });
+    } else {
+      setState(() {
+        scanController.text = 'MC' + scanController.text.toString();
+        print(scanController.text);
+      });
+    }
+
     for (int i = 0; i < list.length; i++) {
       if (list[i] == scanController.text.toString()) {
         showErrorDialog('Data Duplicate!');
@@ -308,7 +326,7 @@ class _Supplier3State extends State<Supplier3> {
     });
     print(data.toString());
     setState(() {
-      step = 0;
+      step = 1;
       list.clear();
       listVisible = false;
     });
